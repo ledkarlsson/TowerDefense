@@ -34,7 +34,6 @@ class Game(): #the main class that we call "Game"
      def __init__(self): #setting up the window for the game here
           self.root=Tk() #saying this window will use tkinter
           self.root.title("Tower Defense Ultra Mode")
-          self.RUN=True #creating a variable RUN. does nothing yet.hu
           self.root.protocol("WM_DELETE_WINDOW", self.end)
 
           self.frame = Frame(master= self.root)
@@ -60,11 +59,10 @@ class Game(): #the main class that we call "Game"
           self.root.mainloop() #starts running the tkinter graphics loop
 
      def run(self):
-          if self.RUN is True: #always going to be true for now
-               self.update() #calls the function 'def update(self):'
-               self.paint() #calls the function 'def paint(self):'
-               
-               self.root.after(50, self.run) #does a run of the function every 50/1000 = 1/20 of a second
+          self.update() #calls the function 'def update(self):'
+          self.paint() #calls the function 'def paint(self):'
+          
+          self.root.after(50, self.run) #does a run of the function every 50/1000 = 1/20 of a second
             
      def end(self):
         self.root.destroy() #closes the game window and ends the program
