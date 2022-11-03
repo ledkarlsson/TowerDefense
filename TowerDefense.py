@@ -4,10 +4,8 @@ from PIL import ImageDraw
 from PIL import ImageTk
 import random
 import math
-gridSize = 30 #the height and width of the array of blocks
-blockSize = 20 #pixels wide of each block
-mapSize = gridSize*blockSize
-blockGrid = [[0 for y in range(gridSize)] for x in range(gridSize)] #creates the array for the grid
+from mapGlobal import *
+
 blockDictionary = ["NormalBlock", "PathBlock","WaterBlock"]
 monsterDictionary = ["Monster1", "Monster2","AlexMonster","BenMonster","LeoMonster","MonsterBig"]
 towerDictionary = {"Arrow Shooter":"ArrowShooterTower", "Bullet Shooter":"BulletShooterTower", "Tack Tower": "TackTower", "Power Tower": "PowerTower"}
