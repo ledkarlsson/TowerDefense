@@ -1,5 +1,3 @@
-#IMPORTANT INFORMATION: the use of 'self' ALWAYS refers to the class that it is in. EVERY FUNCTION INSIDE OF A CLASS MUST DECLARE SELF! ex: 'def exampleFunction(self, input1, input2):
-
 from tkinter import *
 from PIL import Image
 from PIL import ImageDraw
