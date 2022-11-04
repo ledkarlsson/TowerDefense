@@ -1,7 +1,8 @@
 from tkinter import NW
 from PIL import Image
 from PIL import ImageTk
-from mapGlobal import *
+from mapGlobal import mapSize, blockGrid, blockSize, gridSize
+
 
 class Mouse():
     def __init__(self, game):  # when i define a "Mouse", this is what happens
@@ -54,24 +55,24 @@ class Mouse():
             self.x = 0
         if self.y < 0:
             self.y = 0
-        self.gridx = int((self.x-(self.x % blockSize))/blockSize)
-        self.gridy = int((self.y-(self.y % blockSize))/blockSize)
+        self.gridx = int((self.x - (self.x % blockSize)) / blockSize)
+        self.gridy = int((self.y - (self.y % blockSize)) / blockSize)
 
     def update(self):
-        if self.gridx >= 0 and self.gridx <= gridSize-1 and self.gridy >= 0 and self.gridy <= gridSize-1:
+        if self.gridx >= 0 and self.gridx <= gridSize - 1 and self.gridy >= 0 and self.gridy <= gridSize - 1:
             blockGrid[self.gridx][self.gridy].hoveredOver(
                 self.pressed, self.game)
         else:
             self.game.displayboard.nextWaveButton.checkPress(
-                self.pressed, self.x-self.xoffset, self.y-self.yoffset)
+                self.pressed, self.x - self.xoffset, self.y - self.yoffset)
             self.game.infoboard.buttonsCheck(
-                self.pressed, self.x-self.xoffset, self.y-self.yoffset)
+                self.pressed, self.x - self.xoffset, self.y - self.yoffset)
 
     def paint(self, canvas):
-        if self.gridx >= 0 and self.gridx <= gridSize-1 and self.gridy >= 0 and self.gridy <= gridSize-1:
+        if self.gridx >= 0 and self.gridx <= gridSize - 1 and self.gridy >= 0 and self.gridy <= gridSize - 1:
             if blockGrid[self.gridx][self.gridy].canPlace:
                 canvas.create_image(
-                    self.gridx*blockSize, self.gridy*blockSize, image=self.image, anchor=NW)
+                    self.gridx * blockSize, self.gridy * blockSize, image=self.image, anchor=NW)
             else:
                 canvas.create_image(
-                    self.gridx*blockSize, self.gridy*blockSize, image=self.canNotPressImage, anchor=NW)
+                    self.gridx * blockSize, self.gridy * blockSize, image=self.canNotPressImage, anchor=NW)
