@@ -602,8 +602,6 @@ class Projectile(object):
         self.speed = blockSize/2
         self.damage = damage
         self.speed = speed
-        #self.image = Image.open("images/projectileImages/"+self.__class__.__name__+ ".png")
-        #self.image = ImageTk.PhotoImage(self.image)
 
     def update(self):
         try:
