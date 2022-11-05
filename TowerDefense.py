@@ -3,13 +3,8 @@ from PIL import Image
 from PIL import ImageTk
 import random
 import math
+from mapglobals import gridSize, blockSize, mapSize, blockGrid
 
-
-gridSize = 30  # the height and width of the array of blocks
-blockSize = 20  # pixels wide of each block
-mapSize = gridSize*blockSize
-blockGrid = [[0 for y in range(gridSize)] for x in range(
-    gridSize)]  # creates the array for the grid
 blockDictionary = ["NormalBlock", "PathBlock", "WaterBlock"]
 monsterDictionary = [
     "Monster1",
