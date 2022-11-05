@@ -2,10 +2,11 @@
 
 from tkinter import *
 from PIL import Image
-from PIL import ImageDraw
 from PIL import ImageTk
 import random
 import math
+
+
 gridSize = 30  # the height and width of the array of blocks
 blockSize = 20  # pixels wide of each block
 mapSize = gridSize*blockSize
