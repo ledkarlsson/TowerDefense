@@ -1,6 +1,5 @@
 from tkinter import *
 from PIL import Image
-from PIL import ImageDraw
 from PIL import ImageTk
 import random
 import math
