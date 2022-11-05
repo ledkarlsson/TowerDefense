@@ -2,10 +2,11 @@
 
 from tkinter import *
 from PIL import Image
-from PIL import ImageDraw
 from PIL import ImageTk
 import random
 import math
+
+
 gridSize = 30 #the height and width of the array of blocks
 blockSize = 20 #pixels wide of each block
 mapSize = gridSize*blockSize
@@ -43,7 +44,7 @@ class Game(): #the main class that we call "Game"
           self.canvas.grid(row = 0,column = 0,rowspan = 2, columnspan = 1) #makes the window called "canvas" complete
 
           self.displayboard = Displayboard(self)
-          
+
           self.infoboard = Infoboard(self)
 
           self.towerbox = Towerbox(self)
@@ -61,9 +62,9 @@ class Game(): #the main class that we call "Game"
      def run(self):
           self.update() #calls the function 'def update(self):'
           self.paint() #calls the function 'def paint(self):'
-          
+
           self.root.after(50, self.run) #does a run of the function every 50/1000 = 1/20 of a second
-            
+
      def end(self):
         self.root.destroy() #closes the game window and ends the program
 
@@ -94,12 +95,12 @@ class Game(): #the main class that we call "Game"
          monstersByHealthReversed = sorted(monsters, key=lambda x: x.health, reverse=False)
          monstersByDistanceReversed = sorted(monsters, key=lambda x: x.distanceTravelled, reverse=False)
          monstersListList = [monstersByHealth,monstersByHealthReversed,monstersByDistance,monstersByDistanceReversed]
-         
+
          for y in range(gridSize):
              for x in range(gridSize):
                  if towerGrid[x][y]:
-                    towerGrid[x][y].update() #updates each tower one by one by going to its 'def update():' command             
-          
+                    towerGrid[x][y].update() #updates each tower one by one by going to its 'def update():' command
+
      def paint(self):
           self.canvas.delete(ALL) #clear the screen
           self.gameMap.paint(self.canvas)
@@ -134,7 +135,7 @@ class Map():
         self.drawnMap.save("images/mapImages/"+mapName+".png")
         self.image = Image.open("images/mapImages/"+mapName+".png")
         self.image = ImageTk.PhotoImage(self.image)
-          
+
     def saveMap(self):
         self.mapFile = open("firstMap.txt","w")
         for y in range(gridSize):
@@ -187,7 +188,7 @@ class Wavegenerator():
                     spawnx = 0
                     spawny = y*blockSize + blockSize/2
                     return
-          
+
      def move(self):
         global pathList
         pathList.append(self.direction)
@@ -207,7 +208,7 @@ class Wavegenerator():
                 self.direction = 1
                 self.move()
                 return
-            
+
          if self.direction != 1 and self.gridx > 0 and self.gridy >= 0 and self.gridy <= gridSize-1:
             if isinstance(blockGrid[self.gridx-1][self.gridy], PathBlock):
                 self.direction = 2
@@ -219,7 +220,7 @@ class Wavegenerator():
                 self.direction = 3
                 self.move()
                 return
-                        
+
          if self.direction != 3 and self.gridy > 0 and self.gridx >= 0 and self.gridx <= gridSize-1:
             if isinstance(blockGrid[self.gridx][self.gridy-1], PathBlock):
                 self.direction = 4
@@ -265,14 +266,14 @@ class NextWaveButton:
                self.color = "red"
           canvas.create_rectangle(self.x, self.y, self.xTwo, self.yTwo, fill=self.color, outline = self.color) #draws a rectangle where the pointer is
           canvas.create_text(500,37,text = "Next Wave")
-          
+
 class MyButton(object):
      def __init__(self, x, y, xTwo, yTwo):
         self.x = x
         self.y = y
         self.xTwo = xTwo
         self.yTwo = yTwo
-     
+
      def checkPress(self, click, x, y):
         if x >=self.x and y >= self.y and x <= self.xTwo and y <= self.yTwo:
              self.pressed()
@@ -289,7 +290,7 @@ class TargetButton(MyButton):
     def __init__(self, x, y, xTwo, yTwo, myType):
         super(TargetButton,self).__init__( x, y, xTwo, yTwo)
         self.type = myType
-     
+
     def pressed(self):
          global displayTower
          displayTower.targetList = self.type
@@ -297,7 +298,7 @@ class TargetButton(MyButton):
 class StickyButton(MyButton):
     def __init__(self, x, y, xTwo, yTwo):
         super(StickyButton,self).__init__(x, y, xTwo, yTwo)
-             
+
     def pressed(self):
          global displayTower
          if displayTower.stickyTarget == False:
@@ -308,7 +309,7 @@ class StickyButton(MyButton):
 class SellButton(MyButton):
     def __init__(self, x, y, xTwo, yTwo):
         super(SellButton,self).__init__(x, y, xTwo, yTwo)
-             
+
     def pressed(self):
          global displayTower
          displayTower.sold()
@@ -317,14 +318,14 @@ class SellButton(MyButton):
 class UpgradeButton(MyButton):
     def __init__(self, x, y, xTwo, yTwo):
         super(UpgradeButton,self).__init__(x, y, xTwo, yTwo)
-             
+
     def pressed(self):
          global money
          global displayTower
          if money >= displayTower.upgradeCost:
               money -= displayTower.upgradeCost
               displayTower.upgrade()
-          
+
 class Infoboard:
      def __init__(self, game):
           self.canvas = Canvas(master = game.frame, width = 162, height = 174, bg = "gray", highlightthickness = 0)
@@ -332,39 +333,39 @@ class Infoboard:
           self.image = ImageTk.PhotoImage(Image.open("images/infoBoard.png"))
           self.canvas.create_image(0,0 , image = self.image, anchor = NW)
           self.currentButtons = []
-     
+
      def buttonsCheck(self, click, x, y):
           if click:
                for i in range(len(self.currentButtons)):
                      if self.currentButtons[i].checkPress(click, x, y):
                           self.displaySpecific()
                           return
-                     
+
      def displaySpecific(self):
           self.canvas.delete(ALL) #clear the screen
           self.canvas.create_image(0,0, image = self.image, anchor = NW)
           self.currentButtons = []
           if displayTower== None:
                return
-          
+
           self.towerImage = ImageTk.PhotoImage(Image.open("images/towerImages/"+displayTower.__class__.__name__+"/"+str(displayTower.level)+ ".png"))
           self.canvas.create_text(80,75,text = displayTower.name, font = ("times",20))
           self.canvas.create_image(5,5 , image = self.towerImage, anchor = NW)
-          
+
           if issubclass(displayTower.__class__, TargetingTower):
-               
+
               self.currentButtons.append(TargetButton(26,30,35,39,0))
               self.canvas.create_text(37,28,text = "> Health", font = ("times",12), fill = "white", anchor = NW)
-                                    
+
               self.currentButtons.append(TargetButton(26,50,35,59,1))
               self.canvas.create_text(37,48,text = "< Health", font = ("times",12), fill = "white", anchor = NW)
-                                                                       
+
               self.currentButtons.append(TargetButton(92,50,101,59,2))
               self.canvas.create_text(103,48,text = "> Distance", font = ("times",12), fill = "white", anchor = NW)
 
               self.currentButtons.append(TargetButton(92,30,101,39,3))
               self.canvas.create_text(103,28,text = "< Distance", font = ("times",12), fill = "white", anchor = NW)
- 
+
 
 
               self.currentButtons.append(StickyButton(10,40,19,49))
@@ -374,7 +375,7 @@ class Infoboard:
                    self.canvas.create_text(120,157,text = "Upgrade: "+ str(displayTower.upgradeCost), font = ("times",12), fill = "light green", anchor = CENTER)
 
               self.canvas.create_text(28,146,text = "Sell", font = ("times",22), fill = "light green", anchor = NW)
-              
+
               self.currentButtons[displayTower.targetList].paint(self.canvas)
               if displayTower.stickyTarget == True:
                    self.currentButtons[4].paint(self.canvas)
@@ -391,7 +392,7 @@ class Infoboard:
           self.canvas.create_image(0,0, image = self.image, anchor = NW)
           self.canvas.create_text(80,75,text = self.text)
           self.canvas.create_image(5,5 , image = self.towerImage, anchor = NW)
-          
+
 class Displayboard:
     def __init__(self, game):
           self.canvas = Canvas(master = game.frame, width = 600, height = 80, bg = "gray", highlightthickness = 0)
@@ -403,13 +404,13 @@ class Displayboard:
     def update(self):
         self.healthbar.update()
         self.moneybar.update()
-    
-    def paint(self):         
+
+    def paint(self):
           self.canvas.delete(ALL) #clear the screen
           self.healthbar.paint(self.canvas)
           self.moneybar.paint(self.canvas)
           self.nextWaveButton.paint(self.canvas)
-               
+
 
 class Towerbox:
      def __init__(self, game):
@@ -442,19 +443,19 @@ class Mouse():
           game.root.bind("<ButtonRelease-1>", self.released) #whenever left mouse button is released, go to def released(event)
           game.root.bind("<Motion>", self.motion) #whenever left mouse button is dragged, go to def released(event)
           self.image = Image.open("images/mouseImages/HoveringCanPress.png")
-          self.image = ImageTk.PhotoImage(self.image) 
+          self.image = ImageTk.PhotoImage(self.image)
           self.canNotPressImage = Image.open("images/mouseImages/HoveringCanNotPress.png")
-          self.canNotPressImage = ImageTk.PhotoImage(self.canNotPressImage) 
-          
+          self.canNotPressImage = ImageTk.PhotoImage(self.canNotPressImage)
+
      def clicked(self, event):
         self.pressed = True #sets a variable
         self.image = Image.open("images/mouseImages/Pressed.png")
-        self.image = ImageTk.PhotoImage(self.image) 
-        
+        self.image = ImageTk.PhotoImage(self.image)
+
      def released(self, event):
         self.pressed = False
         self.image = Image.open("images/mouseImages/HoveringCanPress.png")
-        self.image = ImageTk.PhotoImage(self.image) 
+        self.image = ImageTk.PhotoImage(self.image)
 
      def motion(self, event):
           if event.widget == self.game.canvas:
@@ -488,26 +489,26 @@ class Mouse():
                     canvas.create_image(self.gridx*blockSize,self.gridy*blockSize, image = self.image, anchor = NW)
                else:
                     canvas.create_image(self.gridx*blockSize,self.gridy*blockSize, image = self.canNotPressImage, anchor = NW)
-     
-               
+
+
 class Healthbar():
      def __init__(self):
           self.text = str(health)
-     
+
      def update(self):
         self.text = str(health)
-     
+
      def paint(self, canvas):
           canvas.create_text(40, 40, text="Health: " + self.text,fill="black")
-     
+
 
 class Moneybar():
      def __init__(self):
           self.text = str(money)
-     
+
      def update(self):
         self.text = str(money)
-     
+
      def paint(self, canvas):
           canvas.create_text(240, 40, text="Money: " + self.text,fill="black")
 
@@ -520,7 +521,7 @@ class Projectile(object):
         self.damage = damage
         self.speed = speed
         #self.image = Image.open("images/projectileImages/"+self.__class__.__name__+ ".png")
-        #self.image = ImageTk.PhotoImage(self.image) 
+        #self.image = ImageTk.PhotoImage(self.image)
 
      def update(self):
           try:
@@ -536,23 +537,23 @@ class Projectile(object):
      def gotMonster(self):
         self.target.health -= self.damage
         projectiles.remove(self)
-        
+
      def paint(self,canvas):
          canvas.create_image(self.x,self.y,image = self.image)
-     
+
 
 class TrackingBullet(Projectile):
     def __init__(self,x,y,damage,speed,target):
           super(TrackingBullet,self).__init__(x,y, damage,speed)
           self.target = target
           self.image = Image.open("images/projectileImages/bullet.png")
-          self.image = ImageTk.PhotoImage(self.image) 
-        
+          self.image = ImageTk.PhotoImage(self.image)
+
     def move(self):
         self.length = ((self.x-(self.target.x))**2 + (self.y-(self.target.y))**2)**0.5
         self.x += self.speed*((self.target.x)-self.x)/self.length
         self.y += self.speed*((self.target.y)-self.y)/self.length
-        
+
     def checkHit(self):
         if self.speed**2 > (self.x-(self.target.x))**2 + (self.y-(self.target.y))**2:
             self.hit = True
@@ -568,8 +569,8 @@ class PowerShot(TrackingBullet):
         self.target.health -= self.damage
         if self.target.movement > (self.target.speed)/self.slow:
              self.target.movement = (self.target.speed)/self.slow
-        projectiles.remove(self) 
-        
+        projectiles.remove(self)
+
 class AngledProjectile(Projectile):
      def __init__(self,x,y,damage,speed,angle,givenRange):
           super(AngledProjectile,self).__init__(x,y,damage,speed)
@@ -588,7 +589,7 @@ class AngledProjectile(Projectile):
                     self.hit = True
                     self.target = monsters[i]
                     return
-               
+
      def gotMonster(self):
         self.target.health -= self.damage
         self.target.tick = 0
@@ -601,8 +602,8 @@ class AngledProjectile(Projectile):
           self.distance += self.speed
           if self.distance >= self.range:
                projectiles.remove(self)
-          
-         
+
+
 class Tower(object):
      def __init__(self,x,y,gridx,gridy):
           self.upgradeCost = None
@@ -614,7 +615,7 @@ class Tower(object):
           self.gridx = gridx
           self.gridy = gridy
           self.image = Image.open("images/towerImages/"+self.__class__.__name__+"/1.png")
-          self.image = ImageTk.PhotoImage(self.image) 
+          self.image = ImageTk.PhotoImage(self.image)
 
      def update(self):
           pass
@@ -630,7 +631,7 @@ class Tower(object):
 
      def paintSelect(self,canvas):
           canvas.create_oval(self.x-self.range,self.y-self.range,self.x + self.range,self.y + self.range,fill=None, outline = "white")
- 
+
      def paint(self, canvas):
           canvas.create_image(self.x,self.y, image = self.image, anchor = CENTER)
 
@@ -644,14 +645,14 @@ class ShootingTower(Tower):
 
      def update(self):
           self.prepareShot()
-              
+
 class TargetingTower(ShootingTower):
     def __init__(self,x,y,gridx,gridy):
         super(TargetingTower,self).__init__(x,y,gridx,gridy)
         self.target = None
         self.targetList = 0
         self.stickyTarget = False
-    
+
     def prepareShot(self):
           self.checkList = monstersListList[self.targetList]
           if self.ticks != 20/self.bulletsPerSecond:
@@ -671,7 +672,7 @@ class TargetingTower(ShootingTower):
               for i in range(len(self.checkList)):
                   if (self.range+blockSize/2)**2 >= (self.x-self.checkList[i].x)**2 + (self.y-self.checkList[i].y)**2:
                       self.target = self.checkList[i]
-        
+
 
 class ArrowShooterTower(TargetingTower):
      def __init__(self,x,y,gridx,gridy):
@@ -692,11 +693,11 @@ class ArrowShooterTower(TargetingTower):
           elif self.level == 3:
                self.upgradeCost = None
                self.bulletsPerSecond = 2
-          
+
      def shoot(self):
         self.angle = math.atan2(self.y- self.target.y,self.target.x-self.x)
         projectiles.append(AngledProjectile(self.x , self.y, self.damage, self.speed, self.angle,self.range+blockSize/2))
-          
+
 class BulletShooterTower(TargetingTower):
      def __init__(self,x,y,gridx,gridy):
           super(BulletShooterTower,self).__init__(x,y,gridx,gridy)
@@ -723,7 +724,7 @@ class PowerTower(TargetingTower):
 
      def shoot(self):
           projectiles.append(PowerShot(self.x , self.y, self.damage, self.speed, self.target,self.slow))
- 
+
 class TackTower(TargetingTower):
      def __init__(self,x,y,gridx,gridy):
           super(TackTower,self).__init__(x,y,gridx,gridy)
@@ -733,13 +734,13 @@ class TackTower(TargetingTower):
           self.bulletsPerSecond = 1
           self.damage = 10
           self.speed = blockSize
-          
+
      def shoot(self):
           for i in range(8):
              self.angle = math.radians(i*45)
              projectiles.append(AngledProjectile(self.x , self.y, self.damage, self.speed, self.angle,self.range))
- 
-     
+
+
 class Monster(object):
      def __init__(self,distance):
           self.alive = True
@@ -758,7 +759,7 @@ class Monster(object):
           self.magicresist = 0
           self.value = 0
           self.image = Image.open("images/monsterImages/"+self.__class__.__name__+ ".png")
-          self.image = ImageTk.PhotoImage(self.image) 
+          self.image = ImageTk.PhotoImage(self.image)
 
      def update(self):
           if self.health <= 0:
@@ -811,16 +812,16 @@ class Monster(object):
           global health
           health -= 1
           self.die()
-              
+
      def die(self):
           self.alive = False
           monsters.remove(self)
 
      def paint(self,canvas):
-          canvas.create_rectangle(self.x-self.axis, self.y-3*self.axis/2, self.x+self.axis-1, self.y-self.axis-1, fill="red", outline = "black") 
+          canvas.create_rectangle(self.x-self.axis, self.y-3*self.axis/2, self.x+self.axis-1, self.y-self.axis-1, fill="red", outline = "black")
           canvas.create_rectangle(self.x-self.axis+1, self.y-3*self.axis/2 +1, self.x-self.axis+(self.axis*2-2)*self.health/self.maxHealth, self.y-self.axis-2, fill="green", outline = "green")
           canvas.create_image(self.x,self.y, image = self.image, anchor = CENTER)
- 
+
 
 
 class Monster1(Monster):
@@ -832,7 +833,7 @@ class Monster1(Monster):
           self.speed = float(blockSize)/2
           self.movement = blockSize/3
           self.axis = blockSize/2
-          
+
 class Monster2(Monster):
      def __init__(self,distance):
           super(Monster2,self).__init__(distance)
@@ -892,7 +893,7 @@ class LeoMonster(Monster):
           self.speed = float(blockSize)/2
           self.movement = float(blockSize)/2
           self.axis = blockSize/4
-          
+
 class MonsterBig(Monster):
      def __init__(self,distance):
           super(MonsterBig,self).__init__(distance)
@@ -928,7 +929,7 @@ class Block(object):
                     self.towerType = globals()[towerDictionary[selectedTower]]
                     towerGrid[self.gridx][self.gridy] = self.towerType(self.x,self.y,self.gridx,self.gridy)
                     money -= towerCost[selectedTower]
-                    
+
 
      def update(self):
           pass
@@ -946,13 +947,13 @@ class NormalBlock(Block):
 class PathBlock(Block):
      def __init__(self,x,y,blockNumber,gridx,gridy):
           super(PathBlock,self).__init__(x,y,blockNumber,gridx,gridy)
-          self.canPlace = False         
+          self.canPlace = False
 
 class WaterBlock(Block):
      def __init__(self,x,y,blockNumber,gridx,gridy):
           super(WaterBlock,self).__init__(x,y,blockNumber,gridx,gridy)
-          self.canPlace = False 
-                                  
+          self.canPlace = False
+
 game=Game() #start the application at Class Game()
 
 
