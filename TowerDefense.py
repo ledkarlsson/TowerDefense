@@ -458,8 +458,12 @@ class Infoboard:
 
 class Displayboard:
     def __init__(self, game):
-        self.canvas = tkinter.Canvas(master=game.frame, width=600,
-                             height=80, bg="gray", highlightthickness=0)
+        self.canvas = tkinter.Canvas(
+            master=game.frame,
+            width=600,
+            height=80,
+            bg="gray",
+            highlightthickness=0)
         self.canvas.grid(row=2, column=0)
         self.healthbar = Healthbar()
         self.moneybar = Moneybar()
@@ -630,8 +634,7 @@ class TrackingBullet(Projectile):
         self.image = ImageTk.PhotoImage(self.image)
 
     def move(self):
-        self.length = ((self.x-(self.target.x))**2 +
-                       (self.y-(self.target.y))**2)**0.5
+        self.length = ((self.x-(self.target.x))**2 + (self.y-(self.target.y))**2)**0.5
         self.x += self.speed*((self.target.x)-self.x)/self.length
         self.y += self.speed*((self.target.y)-self.y)/self.length
 
@@ -697,8 +700,7 @@ class Tower(object):
         self.y = y
         self.gridx = gridx
         self.gridy = gridy
-        self.image = Image.open("images/towerImages/" +
-                                self.__class__.__name__+"/1.png")
+        self.image = Image.open("images/towerImages/" + self.__class__.__name__+"/1.png")
         self.image = ImageTk.PhotoImage(self.image)
 
     def update(self):
@@ -715,8 +717,7 @@ class Tower(object):
         towerGrid[self.gridx][self.gridy] = None
 
     def paintSelect(self, canvas):
-        canvas.create_oval(self.x-self.range, self.y-self.range, self.x +
-                           self.range, self.y + self.range, fill=None, outline="white")
+        canvas.create_oval(self.x-self.range, self.y-self.range, self.x + self.range, self.y + self.range, fill=None, outline="white")
 
     def paint(self, canvas):
         canvas.create_image(self.x, self.y, image=self.image, anchor=tkinter.CENTER)
@@ -948,8 +949,7 @@ class Monster2(Monster):
     def killed(self):
         global money
         money += self.value
-        monsters.append(Monster1(self.distanceTravelled +
-                        blockSize*(.5-random.random())))
+        monsters.append(Monster1(self.distanceTravelled + blockSize*(.5-random.random())))
         self.die()
 
 
