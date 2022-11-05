@@ -967,8 +967,8 @@ class AlexMonster(Monster):
         global money
         money += self.value
         for i in range(5):
-            monsters.append(Monster2(self.distanceTravelled +
-                            blockSize*(.5-random.random())))
+            monsters.append(Monster2(
+                self.distanceTravelled + blockSize*(.5-random.random())))
         self.die()
 
 
