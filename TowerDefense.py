@@ -275,7 +275,7 @@ class Wavegenerator():
         self.currentMonster = self.currentMonster + 1
 
     def update(self):
-        if self.done == False:
+        if not self.done:
             if self.currentMonster == len(self.currentWave):
                 self.game.displayboard.nextWaveButton.canPress = True
             else:
@@ -347,7 +347,7 @@ class StickyButton(MyButton):
 
     def pressed(self):
         global displayTower
-        if displayTower.stickyTarget == False:
+        if not displayTower.stickyTarget:
             displayTower.stickyTarget = True
         else:
             displayTower.stickyTarget = False
@@ -399,7 +399,7 @@ class Infoboard:
         self.canvas.delete(tkinter.ALL)  # clear the screen
         self.canvas.create_image(0, 0, image=self.image, anchor=tkinter.NW)
         self.currentButtons = []
-        if displayTower == None:
+        if displayTower is None:
             return
 
         self.towerImage = ImageTk.PhotoImage(Image.open(
@@ -437,7 +437,7 @@ class Infoboard:
                 "times", 22), fill="light green", anchor=tkinter.NW)
 
             self.currentButtons[displayTower.targetList].paint(self.canvas)
-            if displayTower.stickyTarget == True:
+            if displayTower.stickyTarget:
                 self.currentButtons[4].paint(self.canvas)
 
     def displayGeneric(self):
@@ -605,7 +605,7 @@ class Projectile(object):
 
     def update(self):
         try:
-            if target.alive == False:
+            if not target.alive:
                 projectiles.remove(self)
                 return
         except:
@@ -745,7 +745,7 @@ class TargetingTower(ShootingTower):
         self.checkList = monstersListList[self.targetList]
         if self.ticks != 20/self.bulletsPerSecond:
             self.ticks += 1
-        if self.stickyTarget == False:
+        if not self.stickyTarget:
             for i in range(len(self.checkList)):
                 if (self.range+blockSize/2)**2 >= (self.x-self.checkList[i].x)**2 + (self.y-self.checkList[i].y)**2:
                     self.target = self.checkList[i]
@@ -756,7 +756,7 @@ class TargetingTower(ShootingTower):
                     self.ticks = 0
             else:
                 self.target = None
-        elif self.stickyTarget == True:
+        elif self.stickyTarget:
             for i in range(len(self.checkList)):
                 if (self.range+blockSize/2)**2 >= (self.x-self.checkList[i].x)**2 + (self.y-self.checkList[i].y)**2:
                     self.target = self.checkList[i]
@@ -1026,7 +1026,7 @@ class Block(object):
         self.axis = blockSize/2
 
     def hoveredOver(self, click, game):
-        if click == True:
+        if click:
             global towerGrid
             global money
             if towerGrid[self.gridx][self.gridy]:
@@ -1035,7 +1035,7 @@ class Block(object):
                     global displayTower
                     displayTower = towerGrid[self.gridx][self.gridy]
                     game.infoboard.displaySpecific()
-            elif selectedTower != "<None>" and self.canPlace == True and money >= towerCost[selectedTower]:
+            elif selectedTower != "<None>" and self.canPlace and money >= towerCost[selectedTower]:
                 self.towerType = globals()[towerDictionary[selectedTower]]
                 towerGrid[self.gridx][self.gridy] = self.towerType(
                     self.x, self.y, self.gridx, self.gridy)
