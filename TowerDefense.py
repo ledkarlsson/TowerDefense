@@ -1,6 +1,7 @@
 # IMPORTANT INFORMATION: the use of 'self' ALWAYS refers to the class that it is in. EVERY FUNCTION INSIDE OF A CLASS MUST DECLARE SELF! ex: 'def exampleFunction(self, input1, input2):
 
 from tkinter import *
+import tkinter
 from PIL import Image
 from PIL import ImageTk
 import random
@@ -9,7 +10,7 @@ import math
 
 gridSize = 30  # the height and width of the array of blocks
 blockSize = 20  # pixels wide of each block
-mapSize = gridSize*blockSize
+mapSize = gridSize * blockSize
 blockGrid = [[0 for y in range(gridSize)] for x in range(
     gridSize)]  # creates the array for the grid
 blockDictionary = ["NormalBlock", "PathBlock", "WaterBlock"]
@@ -39,16 +40,19 @@ displayTower = None
 
 class Game():  # the main class that we call "Game"
     def __init__(self):  # setting up the window for the game here
-        self.root = Tk()  # saying this window will use tkinter
+        self.root = tkinter.Tk()  # saying this window will use tkinter
         self.root.title("Tower Defense Ultra Mode")
         self.root.protocol("WM_DELETE_WINDOW", self.end)
 
-        self.frame = Frame(master=self.root)
+        self.frame = tkinter.Frame(master=self.root)
         self.frame.grid(row=0, column=0)
 
         # actually creates a window and puts our frame on it
-        self.canvas = Canvas(master=self.frame, width=mapSize,
-                             height=mapSize, bg="white", highlightthickness=0)
+        self.canvas = tkinter.Canvas(
+            master=self.frame,
+            width=mapSize,
+            height=mapSize,
+            bg="white", highlightthickness=0)
         # makes the window called "canvas" complete
         self.canvas.grid(row=0, column=0, rowspan=2, columnspan=1)
 
@@ -144,7 +148,7 @@ class Map():
     def loadMap(self, mapName):
         self.drawnMap = Image.new(
             "RGBA", (mapSize, mapSize), (255, 255, 255, 255))
-        self.mapFile = open("texts/mapTexts/"+mapName+".txt", "r")
+        self.mapFile = open("texts/mapTexts/" + mapName + ".txt", "r")
         self.gridValues = list(map(int, (self.mapFile.read()).split()))
         for y in range(gridSize):
             for x in range(gridSize):
