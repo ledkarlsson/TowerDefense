@@ -4,6 +4,7 @@ import tkinter
 
 from PIL import Image, ImageTk
 
+import gameGlobal
 from mapglobals import blockGrid, blockSize, gridSize, mapSize
 from mouse import Mouse
 
@@ -25,7 +26,7 @@ towerCost = {
     "Bullet Shooter": 150,
     "Tack Tower": 150,
     "Power Tower": 200}
-towerGrid = [[None for y in range(gridSize)] for x in range(gridSize)]
+
 pathList = []
 spawnx = 0
 spawny = 0
@@ -124,12 +125,11 @@ class Game():  # the main class that we call "Game"
             monsters, key=lambda x: x.distanceTravelled, reverse=False)
         monstersListList = [monstersByHealth, monstersByHealthReversed,
                             monstersByDistance, monstersByDistanceReversed]
-
         for y in range(gridSize):
             for x in range(gridSize):
-                if towerGrid[x][y]:
+                if gameGlobal.towerGrid[x][y]:
                     # updates each tower one by one by going to its 'def update():' command
-                    towerGrid[x][y].update()
+                    gameGlobal.towerGrid[x][y].update()
 
     def paint(self):
         self.canvas.delete(tkinter.ALL)  # clear the screen
@@ -138,8 +138,8 @@ class Game():  # the main class that we call "Game"
         self.mouse.paint(self.canvas)
         for y in range(gridSize):
             for x in range(gridSize):
-                if towerGrid[x][y]:
-                    towerGrid[x][y].paint(self.canvas)
+                if gameGlobal.towerGrid[x][y]:
+                    gameGlobal.towerGrid[x][y].paint(self.canvas)
         for i in range(len(monstersByDistanceReversed)):
             monstersByDistanceReversed[i].paint(self.canvas)
         for i in range(len(projectiles)):
@@ -641,7 +641,7 @@ class Tower(object):
         self.nextLevel()
 
     def sold(self):
-        towerGrid[self.gridx][self.gridy] = None
+        gameGlobal.towerGrid[self.gridx][self.gridy] = None
 
     def paintSelect(self, canvas):
         canvas.create_oval(self.x-self.range, self.y-self.range, self.x +
@@ -958,17 +958,16 @@ class Block(object):
 
     def hoveredOver(self, click, game):
         if click:
-            global towerGrid
             global money
-            if towerGrid[self.gridx][self.gridy]:
+            if gameGlobal.towerGrid[self.gridx][self.gridy]:
                 if selectedTower == "<None>":
-                    towerGrid[self.gridx][self.gridy].clicked = True
+                    gameGlobal.towerGrid[self.gridx][self.gridy].clicked = True
                     global displayTower
-                    displayTower = towerGrid[self.gridx][self.gridy]
+                    displayTower = gameGlobal.towerGrid[self.gridx][self.gridy]
                     game.infoboard.displaySpecific()
             elif selectedTower != "<None>" and self.canPlace and money >= towerCost[selectedTower]:
                 self.towerType = globals()[towerDictionary[selectedTower]]
-                towerGrid[self.gridx][self.gridy] = self.towerType(
+                gameGlobal.towerGrid[self.gridx][self.gridy] = self.towerType(
                     self.x, self.y, self.gridx, self.gridy)
                 money -= towerCost[selectedTower]
 
