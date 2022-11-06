@@ -12,6 +12,7 @@ monstersListList = [
     monstersByDistanceReversed]
 
 projectiles = []
+blockDictionary = ["NormalBlock", "PathBlock", "WaterBlock"]
 
 money = 5000000000
 towerGrid = [[None for y in range(
