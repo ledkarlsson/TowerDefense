@@ -1,8 +1,10 @@
-import tkinter
-from PIL import Image, ImageTk
-import random
 import math
-from mapglobals import gridSize, blockSize, mapSize, blockGrid
+import random
+import tkinter
+
+from PIL import Image, ImageTk
+
+from mapglobals import blockGrid, blockSize, gridSize, mapSize
 from mouse import Mouse
 
 blockDictionary = ["NormalBlock", "PathBlock", "WaterBlock"]

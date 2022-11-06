@@ -1,6 +1,8 @@
 import tkinter
+
 from PIL import Image, ImageTk
-from mapglobals import mapSize, blockSize, gridSize, blockGrid
+
+from mapglobals import blockGrid, blockSize, gridSize, mapSize
 
 
 class Mouse():
